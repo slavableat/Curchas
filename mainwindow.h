@@ -71,6 +71,7 @@ public:
     void deleteToolBar();
 
     void changeColors();
+
     //TODO BFS
     //TODO windows
 
@@ -91,9 +92,13 @@ public slots:
 
     void BFS();
 
-    void load();
+    void load(bool loadFile=true);
 
     void clear();
+
+
+private slots:
+    void on_next_clicked();
 
 private:
     enum names
@@ -123,6 +128,8 @@ private:
     int num = -1;
     QList<int> path;
     QString routeColor;
+    int progress=1;
+    bool lvlComplete=false;
 
 };
 #endif // MAINWINDOW_H

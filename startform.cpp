@@ -22,7 +22,7 @@ void StartForm::on_pushButton_clicked()
 {
     window->show();
     this->close();
-    window->load();
+    window->load(false);
     window->deleteToolBar();
     window->drag();
 }

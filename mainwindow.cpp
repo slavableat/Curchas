@@ -300,6 +300,7 @@ void MainWindow::paintEvent(QPaintEvent * e)
         }
 
     }
+    int counter=0;
      for(int i=0;i<edges.size();i++)
      {
          bool key=false;
@@ -320,6 +321,7 @@ void MainWindow::paintEvent(QPaintEvent * e)
          }
          if(!key)
          {
+             counter++;
                    QPen color(Qt::black, 4, Qt::SolidLine);
                    painter.setPen(color);
                    painter.drawLine(coordinates[edges[i].from].cord, coordinates[edges[i].to].cord);
@@ -332,6 +334,7 @@ void MainWindow::paintEvent(QPaintEvent * e)
             painter.setBrush(QBrush(QColor(coordinates[i].color)));
             painter.drawEllipse(coordinates[i].cord, radius, radius);
         }
+        if(counter==edges.size()) lvlComplete=true;
 }
 
 void MainWindow::changeColors()
@@ -341,6 +344,7 @@ void MainWindow::changeColors()
         coordinates[i].color = colorVertex;
     }
 }
+
 
 void MainWindow::addVertex()
 {
@@ -424,18 +428,21 @@ void MainWindow::save()
     }
 }
 
-void MainWindow::load()
+void MainWindow::load(bool loadFile)
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
-            tr("Load Adjancecy Matrix"), "",
-            tr("Adjancecy Matrix(*.txt)"));
+    //clear();
+    QString fileName;
+    if(loadFile)
+       fileName = QFileDialog::getOpenFileName(this, tr("Load Adjancecy Matrix"), "",tr("Adjancecy Matrix(*.txt)"));
+    else
+    {
+    fileName=QString::number(progress)+".txt";
+    }
     if (fileName.isEmpty())
            return;
        else
        {
-
            QFile file(fileName);
-
            if (!file.open(QIODevice::ReadOnly)) {
                QMessageBox::information(this, tr("Unable to open file"),
                    file.errorString());
@@ -489,3 +496,11 @@ void MainWindow::clear()
     coordinates.clear();
     repaint();
 }
+
+void MainWindow::on_next_clicked()
+{
+    clear();
+    progress++;
+    load(false);
+}
+

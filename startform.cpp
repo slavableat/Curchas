@@ -31,6 +31,7 @@ void StartForm::on_pushButton_clicked()
 void StartForm::on_pushButton_2_clicked()
 {
     window->show();
+    window->hideNextButton();
     this->close();
 }
 

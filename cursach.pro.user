@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 5.0.0, 2021-12-05T17:55:21. -->
+<!-- Written by QtCreator 5.0.0, 2021-12-06T21:52:08. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -237,8 +237,9 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/final/cursach/cursach.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/final/cursach/cursach.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">cursach2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/4/cursach/cursach.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/4/cursach/cursach.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>

@@ -32,8 +32,6 @@ public:
 
     void delVertex(int num);
 
-    QList<int> BFS(int start, int end);
-
     void addEdge(int nativeVertex, int otherVertex);
 
     void delEdge(int nativeVertex, int otherVertex);

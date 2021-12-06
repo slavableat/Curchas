@@ -1,16 +1,32 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
-
+#include <QLayout>
+#include <QWidget>
 double distance(QPoint a, QPoint b)
 {
     return sqrt(pow(a.x()-b.x(), 2)+pow(a.y() - b.y(), 2));
 }
-
+QPushButton * MainWindow::createNextButton(){
+    QPushButton *next = new QPushButton(this);
+    next->setText(tr("NEXT"));
+    QFont font = next->font();
+    font.setBold(true);
+    font.setItalic(true);
+    font.setPixelSize(20);
+    next->setFont(font);
+    connect(next,SIGNAL(clicked()),this,SLOT(on_next_clicked()));
+    next->setEnabled(false);
+    return next;
+}
+void MainWindow::hideNextButton(){
+    next->hide();
+}
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     QWidget::showMaximized();
+    next=createNextButton();
+    this->layout()->addWidget(next);
     radius = 18;
     toolBar = createToolBar();
     addToolBar(Qt::TopToolBarArea, toolBar);
@@ -29,7 +45,6 @@ QToolBar* MainWindow::createToolBar()
     buttons[_drag] = new QAction("Drag node");
     buttons[_addEdge] = new QAction("Add edge");
     buttons[_removeEdge] = new QAction("Remove edge");
-    buttons[_BFS] = new QAction("Shortest path");
     buttons[_save] = new QAction("Save");
     buttons[_load] = new QAction("Load");
     buttons[_clear] = new QAction("Clear");
@@ -38,7 +53,6 @@ QToolBar* MainWindow::createToolBar()
     connect(buttons[_drag], SIGNAL(triggered()),this, SLOT(drag()));
     connect(buttons[_addEdge], SIGNAL(triggered()),this, SLOT(addEdge()));
     connect(buttons[_removeEdge], SIGNAL(triggered()),this, SLOT(removeEdge()));
-    connect(buttons[_BFS],SIGNAL(triggered()), this, SLOT(BFS()));
     connect(buttons[_save], SIGNAL(triggered()), this, SLOT(save()));
     connect(buttons[_load], SIGNAL(triggered()), this, SLOT(load()));
     connect(buttons[_clear], SIGNAL(triggered()),this, SLOT(clear()));
@@ -183,42 +197,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
 
         }
-        else if(mode == _BFS)
-        {
-            bool find = false;
-            if(num<0)
-            {
-                for(int i = 0; i < coordinates.size(); i++)
-                {
-                    if(distance(pos,coordinates[i].cord) < 20)
-                    {
-                        find = true;
-                        num = i;
-                        break;
-                    }
-
-                }
-                if(!find)throw FormException("Not find");
-            }
-            else
-            {
-                for(int i = 0; i < coordinates.size(); i++)
-                {
-                    if(distance(pos,coordinates[i].cord) < 20)
-                    {
-                        find = true;
-                        if(num == i) throw FormException("Same vertex");
-                        path = graph.BFS(num,i);
-                        num = -1;
-                        //throw FormException("asd");
-                        break;
-                    }
-
-                }
-
-                if(!find)throw FormException("Not find");
-            }
-        }
         repaint();
     }
     catch (FormException& e)
@@ -254,10 +232,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 coordinates[i].cord = pos;
                 break;
             }
-
         }
+        repaint();
     }
-    repaint();
 }
 
 
@@ -266,22 +243,6 @@ void MainWindow::paintEvent(QPaintEvent * e)
     Q_UNUSED(e);
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    if(mode == _BFS)
-    {
-        if(path.size()>1)
-        {
-            for(int i = 0; i<coordinates.size(); i++)
-            {
-                coordinates[i].color = colorVertex;
-            }
-            for(int i = 0; i<path.size(); i++)
-            {
-                coordinates[path[i]].color = routeColor;
-            }
-            path.clear();
-
-        }
-    }
     //edges
     auto arr = graph.getMatrix();
     QList<Edge> edges;
@@ -321,7 +282,7 @@ void MainWindow::paintEvent(QPaintEvent * e)
          }
          if(!key)
          {
-             counter++;
+                   counter++;
                    QPen color(Qt::black, 4, Qt::SolidLine);
                    painter.setPen(color);
                    painter.drawLine(coordinates[edges[i].from].cord, coordinates[edges[i].to].cord);
@@ -334,21 +295,12 @@ void MainWindow::paintEvent(QPaintEvent * e)
             painter.setBrush(QBrush(QColor(coordinates[i].color)));
             painter.drawEllipse(coordinates[i].cord, radius, radius);
         }
-        if(counter==edges.size()) lvlComplete=true;
-}
-
-void MainWindow::changeColors()
-{
-    for(int i = 0; i<coordinates.size(); i++)
-    {
-        coordinates[i].color = colorVertex;
+        if(counter==edges.size()) {if(next!=nullptr)next->setEnabled(true);}
     }
-}
 
 
 void MainWindow::addVertex()
 {
-    changeColors();
     buttons[mode] ->setChecked(false);
     buttons[_addVertex]->setChecked(true);
     mode = _addVertex;
@@ -357,7 +309,6 @@ void MainWindow::addVertex()
 
 void MainWindow::addEdge()
 {
-    changeColors();
     buttons[mode] ->setChecked(false);
     buttons[_addEdge]->setChecked(true);
     mode = _addEdge;
@@ -366,7 +317,6 @@ void MainWindow::addEdge()
 
 void MainWindow::drag()
 {
-    changeColors();
     buttons[mode] ->setChecked(false);
     buttons[_drag]->setChecked(true);
     mode = _drag;
@@ -375,7 +325,6 @@ void MainWindow::drag()
 
 void MainWindow::removeVertex()
 {
-    changeColors();
     buttons[mode] ->setChecked(false);
     buttons[_removeVertex]->setChecked(true);
     mode = _removeVertex;
@@ -384,18 +333,9 @@ void MainWindow::removeVertex()
 
 void MainWindow::removeEdge()
 {
-    changeColors();
     buttons[mode] ->setChecked(false);
     buttons[_removeEdge]->setChecked(true);
     mode = _removeEdge;
-    num = -1;
-}
-
-void MainWindow::BFS()
-{
-    buttons[mode] ->setChecked(false);
-    buttons[_BFS]->setChecked(true);
-    mode = _BFS;
     num = -1;
 }
 
@@ -430,7 +370,7 @@ void MainWindow::save()
 
 void MainWindow::load(bool loadFile)
 {
-    //clear();
+    clear();
     QString fileName;
     if(loadFile)
        fileName = QFileDialog::getOpenFileName(this, tr("Load Adjancecy Matrix"), "",tr("Adjancecy Matrix(*.txt)"));
@@ -496,11 +436,14 @@ void MainWindow::clear()
     coordinates.clear();
     repaint();
 }
-
 void MainWindow::on_next_clicked()
 {
     clear();
     progress++;
     load(false);
+    next->setDisabled(true);
 }
+
+
+
 

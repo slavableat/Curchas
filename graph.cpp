@@ -59,43 +59,6 @@ void Graph::delEdge(int nativeVertex, int otherVertex)
     }
 }
 
-QList<int> Graph::BFS(int start, int end)
-{
-    size_t size = adjacencyMatrix.size();
-    std::vector<bool> used(size);
-    used[start] = true;
-    QQueue<int> queue;
-    queue.enqueue(start);
-    std::vector<size_t> routes(size);
-    std::vector<int> ancestor(size);
-    ancestor[start] = -1;
-    while(!queue.empty())
-    {
-        int first = queue.front();
-        queue.dequeue();
-        for(size_t i = 0; i < size; i++)
-        {
-            short int to = i;
-            if(!used[to] && adjacencyMatrix[first][i] == 1)
-            {
-                used[to] = true;
-                queue.enqueue(to);
-                routes[to] = routes[first]+1;
-                ancestor[to] = first;
-            }
-        }
-    }
-    if(!used[end])
-        throw GraphException("No way between this points");
-    else
-    {
-        QList<int> path;
-        for (int v=end; v!=-1; v=ancestor[v]) path.push_back (v);
-        return path;
-    }
-}
-
-
 Graph::Graph(QList<QList<int>>  arr)
 {
     adjacencyMatrix = arr;

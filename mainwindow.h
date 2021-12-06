@@ -13,7 +13,8 @@
 #include <QKeyEvent>
 #include <QToolBar>
 #include <QAction>
-
+#include <QGraphicsScene>
+#include <QPushButton>
 
 class FormException
 {
@@ -70,10 +71,9 @@ public:
 
     void deleteToolBar();
 
-    void changeColors();
+    QPushButton* createNextButton();
 
-    //TODO BFS
-    //TODO windows
+    void hideNextButton();
 
 public slots:
     void addVertex();
@@ -90,16 +90,11 @@ public slots:
 
     void save();
 
-    void BFS();
-
     void load(bool loadFile=true);
 
     void clear();
 
-
-private slots:
     void on_next_clicked();
-
 private:
     enum names
     {
@@ -108,10 +103,10 @@ private:
         _drag = 2,
         _addEdge = 3,
         _removeEdge = 4,
-        _BFS = 5,
-        _clear = 6,
-        _load = 7,
-        _save = 8
+        _clear = 5,
+        _load = 6,
+        _save = 7
+
     };
     Graph graph;
     int radius;
@@ -120,16 +115,15 @@ private:
     QList<Vertex> coordinates;
     Ui::MainWindow *ui;
     int mode;
-    static const int size = 6;
-    static const int _size = 9;
+    static const int size = 5;
+    static const int _size = 8;
     QAction *buttons[_size];
     QToolBar *toolBar;
+    QPushButton *next;
     bool success = false;
     int num = -1;
     QList<int> path;
     QString routeColor;
     int progress=1;
-    bool lvlComplete=false;
-
 };
 #endif // MAINWINDOW_H

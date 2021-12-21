@@ -89,7 +89,7 @@
     <string notr="true">background-color: rgb(248, 203, 200);</string>
    </property>
    <property name="text">
-    <string>Level creator</string>
+    <string>Graph creator</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_3">

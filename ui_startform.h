@@ -1,4 +1,5 @@
-/********************************************************************************** Form generated from reading UI file 'startform.ui'
+/********************************************************************************
+** Form generated from reading UI file 'startform.ui'
 **
 ** Created by: Qt User Interface Compiler version 6.1.3
 **
@@ -72,7 +73,7 @@ public:
     {
         StartForm->setWindowTitle(QCoreApplication::translate("StartForm", "Form", nullptr));
         pushButton->setText(QCoreApplication::translate("StartForm", "Start ", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("StartForm", "Level creator", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("StartForm", "Graph creator", nullptr));
         pushButton_3->setText(QCoreApplication::translate("StartForm", "Exit", nullptr));
     } // retranslateUi
 

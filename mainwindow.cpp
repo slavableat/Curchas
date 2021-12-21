@@ -24,7 +24,8 @@ void MainWindow::hideNextButton(){
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QWidget::showMaximized();
+    QSize size = qApp->primaryScreen()->availableSize();
+    this->setFixedSize(size);
     next=createNextButton();
     this->layout()->addWidget(next);
     radius = 18;
@@ -34,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     routeColor = "#FF0000";
     colorVertex = "#000000";
     colorEdge = "#000000";
+    setMouseTracking(true);                       //test
+    centralWidget()->setMouseTracking(true);      //test
 }
 
 
@@ -79,7 +82,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initMatrix()
 {
-   int x = 40, y = 40;
+   int x = 1000, y = 40;
    int m = 50;
    auto arr = graph.getMatrix();
    for(int i = 0; i<arr.size(); i++)
@@ -221,20 +224,23 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-    QPoint pos = QWidget::mapFromGlobal(QCursor::pos());
     if(mode == _drag)
     {
-        for(int i = 0; i < coordinates.size(); i++)
+        if ( event->buttons() & Qt::LeftButton )
         {
-            if(distance(pos,coordinates[i].cord) < 20)
+            QPoint pos = QWidget::mapFromGlobal(QCursor::pos());
+            for(int i = 0; i < coordinates.size(); i++)
             {
-                coordinates[i].cord = pos;
-                break;
-            }
+                if(distance(pos,coordinates[i].cord) < 20)
+                {
+                    coordinates[i].cord = pos;
+                    break;
+                }
+            }  repaint();
         }
-        repaint();
+
     }
+
 }
 
 
@@ -259,7 +265,6 @@ void MainWindow::paintEvent(QPaintEvent * e)
                if(key) edges.append(Edge(i,j));
             }
         }
-
     }
     int counter=0;
      for(int i=0;i<edges.size();i++)
@@ -288,6 +293,7 @@ void MainWindow::paintEvent(QPaintEvent * e)
                    painter.drawLine(coordinates[edges[i].from].cord, coordinates[edges[i].to].cord);
          }
      }
+     //end
         for(int i = 0; i < coordinates.size(); i++)
         {
             QPen pen(QColor(coordinates[i].color), 2, Qt::SolidLine);
@@ -295,7 +301,7 @@ void MainWindow::paintEvent(QPaintEvent * e)
             painter.setBrush(QBrush(QColor(coordinates[i].color)));
             painter.drawEllipse(coordinates[i].cord, radius, radius);
         }
-        if(counter==edges.size()) {if(next!=nullptr)next->setEnabled(true);}
+        if(counter==edges.size()) {if(next!=nullptr) next->setEnabled(true); }
     }
 
 
@@ -376,7 +382,7 @@ void MainWindow::load(bool loadFile)
        fileName = QFileDialog::getOpenFileName(this, tr("Load Adjancecy Matrix"), "",tr("Adjancecy Matrix(*.txt)"));
     else
     {
-    fileName=QString::number(progress)+".txt";
+    fileName=QDir::currentPath() + "\\levels\\" +QString::number(progress)+".txt";
     }
     if (fileName.isEmpty())
            return;
@@ -405,7 +411,6 @@ void MainWindow::load(bool loadFile)
                        if(str[i] == '0') arr[row].push_back(0);
                        else if(str[i] == '1') arr[row].push_back(1);
                        else throw FormException("Incorrect file data");
-
                    }
                    column = str.size();
 
@@ -426,8 +431,9 @@ void MainWindow::load(bool loadFile)
                QMessageBox::information(this, tr("Error"),
                    tr("The file you are attempting to open has incorrect matrix."));
            }
+           initMatrix();
     }
-    initMatrix();
+
 }
 
 void MainWindow::clear()
@@ -439,6 +445,7 @@ void MainWindow::clear()
 void MainWindow::on_next_clicked()
 {
     clear();
+    if(progress==10) progress=0;
     progress++;
     load(false);
     next->setDisabled(true);

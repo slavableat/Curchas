@@ -24,25 +24,27 @@ public:
     QString getError(){return error;}
 };
 
-struct Vertex
+class Vertex
 {
+public:
     QPoint cord;
     QString color;
     Vertex(QPoint p, QString col = "#000000"){cord = p;color=col;}
 };
-struct Edge
+class Edge
 {
+public:
     int from;
     int to;
     Edge(int _from, int _to):from(_from),to(_to){}
 };
 
 
-struct PreviousCoursorPos
+class PreviousCoursorPos
 {
+public:
     QPoint point;
     int num;
-
 };
 
 
@@ -115,14 +117,13 @@ private:
     QList<Vertex> coordinates;
     Ui::MainWindow *ui;
     int mode;
-    static const int size = 5;
-    static const int _size = 8;
+    static const int size = 5;   //toolBar
+    static const int _size = 8;  //toolBar
     QAction *buttons[_size];
     QToolBar *toolBar;
     QPushButton *next;
-    bool success = false;
+    //bool success = false;
     int num = -1;
-    QList<int> path;
     QString routeColor;
     int progress=1;
 };

@@ -6,9 +6,10 @@ StartForm::StartForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StartForm)
 {
+    this->setFixedSize(300, 320);
     ui->setupUi(this);
     window=new MainWindow();
-    window->setWindowIcon(QIcon("D:\\final\\cursach\\icon.png"));
+    window->setWindowIcon(QIcon(QDir::currentPath()+"\\icon.png"));
     window->setWindowTitle("Grapher");
     window->hide();
 }

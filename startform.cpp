@@ -8,19 +8,19 @@ StartForm::StartForm(QWidget *parent) :
 {
     this->setFixedSize(300, 320);
     ui->setupUi(this);
-    window=new MainWindow();
-    window->setWindowIcon(QIcon(QDir::currentPath()+"\\icon.png"));
-    window->setWindowTitle("Grapher");
-    window->hide();
 }
 
 StartForm::~StartForm()
 {
     delete ui;
+    delete window;
 }
 
 void StartForm::on_pushButton_clicked()
 {
+    window=new MainWindow();
+    window->setWindowIcon(QIcon(QDir::currentPath()+"\\icon.png"));
+    window->setWindowTitle("Grapher");
     window->show();
     this->close();
     window->load(false);
@@ -31,6 +31,9 @@ void StartForm::on_pushButton_clicked()
 
 void StartForm::on_pushButton_2_clicked()
 {
+    window=new MainWindow();
+    window->setWindowIcon(QIcon(QDir::currentPath()+"\\icon.png"));
+    window->setWindowTitle("Grapher");
     window->show();
     window->hideNextButton();
     this->close();
@@ -39,6 +42,7 @@ void StartForm::on_pushButton_2_clicked()
 
 void StartForm::on_pushButton_3_clicked()
 {
+    delete ui;
     exit(0);
 }
 
